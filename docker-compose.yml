@@ -25,6 +25,8 @@ services:
         #we need to design an automated hostname/dns subsystem 
         environment:
          PGHOST: pgdb
+         PGUSER: "${DBUSER:-odoo}"
+         PGPASSWORD: "${DBPASS:-odoo}"         
          VIRTUAL_HOST: "${VHOST:-odoo.local.khem.io}"
          VIRTUAL_PORT: "${VPORT:-8069}"
          LETSENCRYPT_HOST: "${VHOST:-odoo.local.khem.io}"
