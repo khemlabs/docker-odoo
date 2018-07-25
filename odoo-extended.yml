@@ -1,28 +1,25 @@
-version: '2'
+version: '3'
 services:
-    db:
+    pgdb:
         image: postgres:9.5
         environment:
-            - POSTGRES_USER=odoo
-            - POSTGRES_PASSWORD=odoo
+           POSTGRES_PASSWORD: "${DBPASS:-odoo}"
+           POSTGRES_USER: "${DBUSER:-odoo}"
+           PGDATA: "${DBDATA:-/var/lib/postgresql/data/pgdata}"
         volumes:
-            - pg_data:/var/lib/postgresql/data
-    odoo:
+            - "${DBVOL:-odoo_db_data}:${DBDATA:-/var/lib/postgresql/data/pgdata}"
         extends:
             file: odoo-common.yml
             service: odoo_base
         depends_on:
-            - db
-        ports:
-            - "8069:8069"
-            - "8072:8072"
+            - pgdb
     odoo_in:
         extends:
             file: odoo-common.yml
             service: odoo_base
         # command: /bin/bash
         depends_on:
-            - db
+            - pgdb
     odoo_prod:
         extends:
             file: odoo-common.yml
@@ -30,7 +27,7 @@ services:
         # command: /bin/bash
         restart: always
         depends_on:
-            - db
+            - pgdb
 volumes:
-    pg_data:
-    odoo_data:
+    odoo_db_data:
+    odoo_web_data:
